@@ -10,7 +10,73 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* 1. อนิเมชันละอองดาว (เก็บไว้) */
+  --animate-particle: floatUp 8s linear infinite;
+
+  /* 2. อนิเมชันหมุนวงเวทย์ช้าๆ (1 รอบ ใช้เวลา 120 วินาที) */
+  --animate-spin-magic: spinMagic 120s linear infinite;
+
+  /* 3. แอนิเมชันเส้นพลังงานทองและม่วงวิ่งผ่านจอ */
+  --animate-energy-flow: energyFlow 25s linear infinite;
 }
+
+/* ==================== KEYFRAMES ==================== */
+
+/* อนิเมชันละอองดาวลอยขึ้น */
+@keyframes floatUp {
+  0% {
+    transform: translateY(105vh) scale(0.3);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.7;
+  }
+
+  90% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* อนิเมชันหมุนวงเวทย์ 360 องศา */
+@keyframes spinMagic {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* อนิเมชันเส้นพลังงานทองและม่วงวิ่งผ่านจอ */
+@keyframes energyFlow {
+  0% {
+    background-position: -200% 0;
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.2;
+  }
+
+  80% {
+    opacity: 0.2;
+  }
+
+  100% {
+    background-position: 200% 0;
+    opacity: 0;
+  }
+}
+
+/* ==================== DEFAULT STYLES ==================== */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -23,4 +89,23 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  /* เพิ่มเพื่อให้เส้นพลังงานอยู่ด้านหน้า */
+  overflow: hidden;
+  /* ป้องกันแถบเลื่อน */
+}
+
+/* เพิ่มเส้นพลังงาน */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #ffd700, #8a2be2, transparent);
+  background-size: 200% 100%;
+  animation: var(--animate-energy-flow);
+  z-index: -1;
+  /* ให้อยู่ด้านหลังเนื้อหา */
 }
