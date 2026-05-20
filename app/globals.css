@@ -8,7 +8,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-kanit);
   --font-mono: var(--font-geist-mono);
 
   /* 1. อนิเมชันละอองดาว (เก็บไว้) */
@@ -88,17 +88,15 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-kanit), Arial, Helvetica, sans-serif;
   position: relative;
-  /* เพิ่มเพื่อให้เส้นพลังงานอยู่ด้านหน้า */
-  overflow: hidden;
-  /* ป้องกันแถบเลื่อน */
+  overflow-x: hidden;
 }
 
 /* เพิ่มเส้นพลังงาน */
 body::before {
   content: "";
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -108,4 +106,38 @@ body::before {
   animation: var(--animate-energy-flow);
   z-index: -1;
   /* ให้อยู่ด้านหลังเนื้อหา */
+}
+
+/* ==================== BUTTON MAGIC STYLE ==================== */
+.btn-magic {
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #db2777, #2563eb);
+  background-size: 300% 100%;
+  animation: magicGlow 6s linear infinite;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-magic:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.8), 
+              inset 0 0 10px rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-magic:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+}
+
+@keyframes magicGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
