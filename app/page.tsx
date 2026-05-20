@@ -48,7 +48,9 @@ const MagicCircleSvg = () => (
 interface FormDataState {
   name: string;
   gender: string;
-  birthDate: string;
+  birthDay: string;
+  birthMonth: string;
+  birthYear: string;
   birthTime: string;
 }
 
@@ -59,11 +61,31 @@ interface FortuneResult {
   luckyColor: string;
 }
 
+const days = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
+const months = [
+  { val: "01", name: "มกราคม" },
+  { val: "02", name: "กุมภาพันธ์" },
+  { val: "03", name: "มีนาคม" },
+  { val: "04", name: "เมษายน" },
+  { val: "05", name: "พฤษภาคม" },
+  { val: "06", name: "มิถุนายน" },
+  { val: "07", name: "กรกฎาคม" },
+  { val: "08", name: "สิงหาคม" },
+  { val: "09", name: "กันยายน" },
+  { val: "10", name: "ตุลาคม" },
+  { val: "11", name: "พฤศจิกายน" },
+  { val: "12", name: "ธันวาคม" }
+];
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 100 }, (_, i) => currentYear - i); // 100 years back
+
 export default function Home() {
   const [formData, setFormData] = useState<FormDataState>({
     name: '',
     gender: 'ชาย',
-    birthDate: '',
+    birthDay: '',
+    birthMonth: '',
+    birthYear: '',
     birthTime: ''
   });
 
@@ -71,13 +93,14 @@ export default function Home() {
 
   const handleCalculate = (e: FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.birthDate) {
+    if (!formData.name || !formData.birthDay || !formData.birthMonth || !formData.birthYear) {
       alert("กรุณากรอกชื่อและวันเกิดด้วยนะจ๊ะ");
       return;
     }
 
+    const birthDate = `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`;
     const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const seedString = `${formData.name}-${formData.birthDate}-${formData.birthTime}-${formData.gender}-${todayStr}`;
+    const seedString = `${formData.name}-${birthDate}-${formData.birthTime}-${formData.gender}-${todayStr}`;
 
     let seedNumber = 0;
     for (let i = 0; i < seedString.length; i++) {
@@ -131,7 +154,7 @@ export default function Home() {
       {/* ==================== 🔯 ZONE: SPINNING MAGIC CIRCLE & CARD ==================== */}
       <div className="relative w-full max-w-md z-20 flex items-center justify-center">
 
-        {/* เลเยอร์วงเวทย์เบื้องหลัง */}
+        {/* เลอย์วงเวทย์เบื้องหลัง */}
         <div className="absolute top-1/2 left-1/2 w-[130%] aspect-square -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 animate-[spin_200s_linear_infinite] text-blue-400 opacity-60">
           <MagicCircleSvg />
         </div>
@@ -153,29 +176,20 @@ export default function Home() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1 text-slate-300">เพศ</label>
-              <select
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                value={formData.gender}
-                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-              >
-                <option value="ชาย">ชาย</option>
-                <option value="หญิง">หญิง</option>
-                <option value="LGBTQ+">LGBTQ+</option>
-              </select>
-            </div>
-
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1 text-slate-300">วันเกิด</label>
-                <input
-                  type="date"
+                <label className="block text-sm font-medium mb-1 text-slate-300">เพศ</label>
+                <select
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                  value={formData.birthDate}
-                  onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                />
+                  value={formData.gender}
+                  onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                >
+                  <option value="ชาย">ชาย</option>
+                  <option value="หญิง">หญิง</option>
+                  <option value="LGBTQ+">LGBTQ+</option>
+                </select>
               </div>
+
               <div>
                 <label className="block text-sm font-medium mb-1 text-slate-300">เวลาเกิด (ไม่ใส่ก็ได้)</label>
                 <input
@@ -184,6 +198,46 @@ export default function Home() {
                   value={formData.birthTime}
                   onChange={(e) => setFormData({ ...formData, birthTime: e.target.value })}
                 />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-slate-300">วันเกิดของคุณ</label>
+              <div className="grid grid-cols-3 gap-2">
+                <select
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-white focus:outline-none focus:border-blue-500 text-sm transition-colors cursor-pointer"
+                  value={formData.birthDay}
+                  onChange={(e) => setFormData({ ...formData, birthDay: e.target.value })}
+                >
+                  <option value="">วัน</option>
+                  {days.map((d) => (
+                    <option key={d} value={d}>{parseInt(d)}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-white focus:outline-none focus:border-blue-500 text-sm transition-colors cursor-pointer"
+                  value={formData.birthMonth}
+                  onChange={(e) => setFormData({ ...formData, birthMonth: e.target.value })}
+                >
+                  <option value="">เดือน</option>
+                  {months.map((m) => (
+                    <option key={m.val} value={m.val}>{m.name}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-white focus:outline-none focus:border-blue-500 text-sm transition-colors cursor-pointer"
+                  value={formData.birthYear}
+                  onChange={(e) => setFormData({ ...formData, birthYear: e.target.value })}
+                >
+                  <option value="">ปี พ.ศ.</option>
+                  {years.map((y) => (
+                    <option key={y} value={String(y)}>
+                      {y + 543}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -199,7 +253,9 @@ export default function Home() {
             <div className="mt-8 border-t border-slate-800 pt-6 space-y-4 relative z-20">
               <div className="bg-blue-950/40 border border-blue-900/50 rounded-xl p-4 text-center">
                 <h2 className="text-xl font-bold text-blue-400">โปรไฟล์ของคุณ {result.profile.name}</h2>
-                <p className="text-xs text-blue-200/70 mt-1">เพศ: {result.profile.gender} | เกิดวันที่: {result.profile.birthDate}</p>
+                <p className="text-xs text-blue-200/70 mt-1">
+                  เพศ: {result.profile.gender} | เกิดวันที่: {parseInt(result.profile.birthDay)} {months.find(m => m.val === result.profile.birthMonth)?.name} พ.ศ. {parseInt(result.profile.birthYear) + 543}
+                </p>
               </div>
 
               <div className="space-y-3">
