@@ -243,7 +243,7 @@ export default function Home() {
 
   return (
     <main
-      className="min-h-screen text-slate-100 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 bg-cover bg-center bg-no-repeat bg-fixed relative"
+      className="min-h-screen text-slate-100 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 bg-slate-950 bg-cover bg-center bg-no-repeat bg-fixed relative overflow-x-hidden"
       style={{ backgroundImage: "url('/images/card-bg.png')" }}
     >
       {/* ==================== ⚡ ZONE: ANIMATION 2 (ENERGY FLOW ทอง-ม่วง) ==================== */}

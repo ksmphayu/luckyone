@@ -23,6 +23,9 @@ export default function RootLayout({
       lang="th"
       className={`${kanit.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preload" href="/images/card-bg.png" as="image" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
